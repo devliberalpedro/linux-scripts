@@ -29,7 +29,7 @@ prompt () {
 	 esac
 }
 
-# Directories
+# Folders
 target_dir="${HOME}/${HOSTNAME}"
 backups_dir="./backups"
 documentos_dir="./Documentos"
