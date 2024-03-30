@@ -1,6 +1,4 @@
 #!/bin/bash
-#
-# This script performs a full fedora system update. User can update services separated (ex. flatpak, dnf)
 
 # Exit Immediately if a command fails
 set -o errexit
