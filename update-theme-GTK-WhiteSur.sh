@@ -1,6 +1,4 @@
 #!/bin/bash
-#
-# This script update a custom theme in Gnome
 
 # Exit Immediately if a command fails
 set -o errexit
@@ -17,52 +15,40 @@ b_CGSC=" \033[1;32m"                            		# bold success color
 b_CRER=" \033[1;31m"                            		# bold error color
 b_CWAR=" \033[1;33m"                            		# bold warning color
 
-# Display message colors
+# display message colors
 prompt () {
-	case ${1} in
-		"-s"|"--success")
-			echo -e "${b_CGSC}${@/-s/}${CDEF}";;            # print success message
-		"-e"|"--error")
-			echo -e "${b_CRER}${@/-e/}${CDEF}";;            # print error message
-		"-w"|"--warning")
-			echo -e "${b_CWAR}${@/-w/}${CDEF}";;            # print warning message
-		"-i"|"--info")
-			echo -e "${b_CCIN}${@/-i/}${CDEF}";;            # print info message
-		*)
-			echo -e "$@"
-		;;
-	 esac
+  case ${1} in
+    "-s"|"--success")
+      echo -e "${b_CGSC}${@/-s/}${CDEF}";;          # print success message
+    "-w"|"--warning")
+      echo -e "${b_CWAR}${@/-w/}${CDEF}";;          # print warning message
+    *)
+      echo -e "$@"
+    ;;
+   esac
 }
 
-# Folders mapping
 customization_dir="${HOME}/Downloads/customizations"
 base_dir="$customization_dir/GTK-WhiteSur"
 theme_dir="$base_dir/whiteSur-gtk-theme"
 
-# Script title
-prompt -w ">>>   WhiteSur Dark Nord GTK Theme Updater   <<<"
-
 if [ ! -d $customization_dir ] || [ ! -d $base_dir ];  then
   prompt -w "ERROR: Theme not installed!"
   exit
-elif [ -d $theme_dir ]; then
-  prompt -w ">> Removing old WhiteSur GTK Theme folder..."
+fi
+
+if [ -d $theme_dir ]; then
   rm -rf $theme_dir
 
-  prompt -i ">> Updating WhiteSur GTK Theme..."
-  if [ git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git ]; then
-    mv WhiteSur-gtk-theme/ whiteSur-gtk-theme && cd whiteSur-gtk-theme
+  prompt -w ">> Install GTK Theme"
+  cd $base_dir
+  
+  git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git
 
-    if [ ./install.sh --nord -l -i fedora -c Light -c Dark -m -p 60 -P default --normal ]; then
-      prompt -i ">> WhiteSur GTK Theme... DONE"
-    else
-      prompt -e ">>> ERROR: Can not install WhiteSur GTK Theme <<<"
-      exit 1
-    fi
-  else
-    prompt -e ">>> ERROR: Can not sync with WhiteSur GTK Theme git repository <<<"
-    exit 1
-  fi
+  mv WhiteSur-gtk-theme/ whiteSur-gtk-theme
+  cd whiteSur-gtk-theme
+  
+  ./install.sh --nord -l -i fedora -c Light -c Dark -m -p 60 -P default --normal
 fi
 
 prompt -s "Nord theme updated!"

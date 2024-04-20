@@ -59,6 +59,7 @@ elif [[ "$optionsSelection" == 1 ]]; then
     prompt -i ">>> Changing windows settings... "
     gsettings set org.gnome.mutter center-new-windows true
     gsettings set org.gnome.desktop.wm.preferences button-layout appmenu:minimize,maximize,close
+    gsettings set org.gnome.desktop.wm.preferences action-middle-click-titlebar minimize
     
     prompt -i ">>> Disabling background logo extension... "
     gsettings set org.gnome.shell disabled-extensions "['background-logo@fedorahosted.org']"

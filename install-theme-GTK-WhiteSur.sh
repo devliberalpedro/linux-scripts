@@ -5,6 +5,7 @@
 # # Exit Immediately if a command fails
 set -o errexit
 
+
 # Colors scheme
 CDEF=" \033[0m"                                 		# default color
 CCIN=" \033[0;36m"                              		# info color
@@ -16,6 +17,7 @@ b_CCIN=" \033[1;36m"                            		# bold info color
 b_CGSC=" \033[1;32m"                            		# bold success color
 b_CRER=" \033[1;31m"                            		# bold error color
 b_CWAR=" \033[1;33m"                            		# bold warning color
+
 
 # Display message colors
 prompt () {
@@ -34,6 +36,7 @@ prompt () {
 	 esac
 }
 
+
 # Folders mapping
 customization_dir="${HOME}/Downloads/customizations"
 base_dir="$customization_dir/GTK-WhiteSur"
@@ -45,52 +48,75 @@ share_dir="${HOME}/.local/share"
 #glava_dir="${base_dir}/glava-config-for-screen-1920x1080"
 #glava_config_dir="${HOME}/.config/glava"
 
+
 # Some variables
 error_path=
 
+
 # Script title
 prompt -w ">>>   WhiteSur Dark Nord GTK Theme   <<<"
+
 
 # Check if base and customization folders exist
 prompt -i ">> Checking for base and customization folders..."
 if [ ! -d $customization_dir ]; then
   prompt -i ">> Creating base and customization folders"
-  if [ ! mkdir $customization_dir ]; then
+
+  mkdir $customization_dir
+
+  if [ ! -d $customization_dir ]; then
     prompt -e ">>> ERROR: Can not create ${customization_dir} folder <<<"
     exit 1
-  elif [ ! mkdir $base_dir ]; then
+  fi
+
+  mkdir $base_dir
+  
+  if [ ! -d $base_dir ]; then
     prompt -e ">>> ERROR: Can not create ${base_dir} folder <<<"
     exit 1
   fi
 elif [ -d $base_dir ]; then
-  if [ ! rm -rf $base_dir ]; then
+  rm -rf $base_dir
+
+  if [ -d $base_dir ]; then
     prompt -e ">>> ERROR: Can not delete the old ${base_dir} folder <<<"
   else
-    if [ ! mkdir $base_dir ]; then
+    mkdir $base_dir
+
+    if [ ! -d $base_dir ]; then
       prompt -e ">>> ERROR: Can not create ${base_dir} folder <<<"
       exit 1
     fi
   fi
 fi
 
+
 # Extract assets into the base folder
 prompt -i ">> Extracting assets into the base folder..."
 cd $base_dir
 
-if [ tar xfz $backups_dir/backgrounds.tar.gz ]; then
+tar xfz $backups_dir/backgrounds.tar.gz
+
+if [ -d $base_dir/backgrounds ]; then
   prompt -i ">> Backgrounds... DONE"
 
-  if [ tar xfz $backups_dir/fonts.tar.gz ]; then
+  tar xfz $backups_dir/fonts.tar.gz
+
+  if [ -d $base_dir/fonts ]; then
     prompt -i ">> Fonts... DONE"
   
-    if [ tar xfz $backups_dir/config-and-readme.tar.gz ]; then
+    tar xfz $backups_dir/config-and-readme.tar.gz
+
+    if [ -f $base_dir/extensions_ReadMe.txt ] && [ -f $base_dir/gnome-nord-extensions.conf ] && [ -f $base_dir/ReadMe.txt ]; then
       prompt -i ">> Config and ReadMe... DONE"
       
-      #if [ ! tar xfz $backups_dir/glava-config.tar.gz ]; then
+      #tar xfz $backups_dir/glava-config.tar.gz
+
+      #if [ -d $base_dir/glava-config ]; then
       #  prompt -i ">> Glava... DONE"
       #else
       #  prompt -e ">>> ERROR: Can not extract glava-config.tar.gz <<<"
-      #exit 1
+      #  exit 1
       #fi
     else
       prompt -e ">>> ERROR: Can not extract config-and-readme.tar.gz <<<"
@@ -105,100 +131,94 @@ else
   exit 1
 fi
 
+
 # Start theme install
 prompt -w ">>> Starting theme install..."
+
 
 # WhiteSur GTK Theme
 cd $base_dir
 prompt -i ">> Installing WhiteSur GTK Theme..."
 
-if [ git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git ]; then
+if [ -d $base_dir/whiteSur-gtk-theme ]; then
+  rm -rf base_dir/whiteSur-gtk-theme
+fi
+
+git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git
+
+if [ -d $base_dir/WhiteSur-gtk-theme ]; then
   mv WhiteSur-gtk-theme/ whiteSur-gtk-theme && cd whiteSur-gtk-theme
 
-  if [ ./install.sh --nord -l -i fedora -c Light -c Dark -m -p 60 -P default --normal ]; then
-    prompt -i ">> WhiteSur GTK Theme... DONE"
-  else
-    prompt -e ">>> ERROR: Can not install WhiteSur GTK Theme <<<"
-    exit 1
-  fi
+  ./install.sh --nord -l -i fedora -c Light -c Dark -m -p 60 -P default --normal
+  prompt -i ">> WhiteSur GTK Theme... DONE"
 else
   prompt -e ">>> ERROR: Can not sync with WhiteSur GTK Theme git repository <<<"
   exit 1
 fi
 
+
 # Nordzy Icon Theme
 cd $base_dir
 prompt -i ">> Installing Nordzy Icon Theme..."
 
-if [ git clone https://github.com/alvatip/Nordzy-icon.git ]; then
+if [ -d $base_dir/nordzy-icon ]; then
+  rm -rf $base_dir/nordzy-icon
+fi
+
+git clone https://github.com/alvatip/Nordzy-icon.git
+
+if [ -d $base_dir/Nordzy-icon ]; then
   mv Nordzy-icon nordzy-icon && cd nordzy-icon
 
-  if [ ./install.sh -t default -c -p ]; then
-    prompt -i ">> Nordzy Icon Theme... DONE"
-  else
-    prompt -e ">>> ERROR: Can not install Nordzy Icon Theme <<<"
-    exit 1
-  fi
+  ./install.sh -t default -c -p
+  prompt -i ">> Nordzy Icon Theme... DONE"
 else
   prompt -e ">>> ERROR: Can not sync with Nordzy Icon Theme git repository <<<"
   exit 1
 fi
 
+
 # Sunity Cursors
 cd $base_dir
 prompt -i ">> Installing Sunity Cursors..."
 
-if [ git clone https://github.com/alvatip/Sunity-cursors.git ]; then
+if [ -d $base_dir/sunity-cursors ]; then
+  rm -rf sunity-cursors
+fi
+
+git clone https://github.com/alvatip/Sunity-cursors.git
+
+if [ -d $base_dir/Sunity-cursors ]; then
   mv Sunity-cursors sunity-cursors && cd sunity-cursors
 
-  if [ ./install.sh ]; then
-    prompt -i ">> Sunity Cursors... DONE"
-  else
-    prompt -e ">>> ERROR: Can not install Sunity Cursors <<<"
-    exit 1
-  fi
+  ./install.sh
+  prompt -i ">> Sunity Cursors... DONE"
 else
   prompt -e ">>> ERROR: Can not sync with Sunity Cursors git repository <<<"
   exit 1
 fi
+
 
 # Install Fonts and Wallpapers
 cd $base_dir
 prompt -i ">> Installing fonts and wallpapers..."
 
 if [ -d $fonts_dir ]; then
-  if [ cp -Rv fonts/* $fonts_dir ]; then
-    prompt -i ">> Fonts install... DONE"
-  else
-    prompt -e ">>> ERROR: Can not copy fonts to ${fonts_dir} <<<"
-    exit 1
-  fi
+  cp -Rv fonts/* $fonts_dir
+  prompt -i ">> Fonts install... DONE"
 else
-  if [ cp -Rv fonts $share_dir ]; then
-    prompt -i ">> Fonts install... DONE"
-  else
-    prompt -e ">>> ERROR: Can not copy fonts to ${fonts_dir} <<<"
-    exit 1
-  fi  
+  cp -Rv fonts $share_dir
+  prompt -i ">> Fonts install... DONE"
 fi
-
-cd $base_dir
 
 if [ -d $wallpapers_dir ]; then
-  if [ cp -Rv backgrounds/* $wallpapers_dir ]; then
-    prompt -i ">> Wallpapers install... DONE"
-  else
-    prompt -e ">>> ERROR: Can not copy wallpapers to ${wallpapers_dir} <<<"
-    exit 1
-  fi
+  cp -Rv backgrounds/* $wallpapers_dir
+  prompt -i ">> Wallpapers install... DONE"
 else
-  if [ cp -Rv backgrounds $share_dir ]; then
-    prompt -i ">> Wallpapers install... DONE"
-  else
-    prompt -e ">>> ERROR: Can not copy wallpapers to ${wallpapers_dir} <<<"
-    exit 1
-  fi  
+  cp -Rv backgrounds $share_dir
+  prompt -i ">> Wallpapers install... DONE"
 fi
+
 
 # Install and configure Glava
 #cd $base_dir
@@ -227,34 +247,32 @@ fi
 #  exit 1
 #fi
 
+
 # Change GDM background
-cd $base_dir
 prompt -i ">> Change GDM background..."
 
-if [ cd whiteSur-gtk-theme ]; then
-  if [ sudo ./tweaks.sh -g -b $wallpapers_dir/"abstrato (26).jpg" ]; then
-    prompt -i ">> Change GDM background... DONE"
-  else
-    prompt -e ">>> ERROR: Can not change GDM background <<<"
-  fi
+if [ -d $base_dir/whiteSur-gtk-theme ]; then
+  cd $base_dir/whiteSur-gtk-theme
 else
   prompt -e ">>> ERROR: Can not find whiteSur-gtk-theme folder <<<"
   exit 1
 fi
+  
+sudo ./tweaks.sh -g -b $wallpapers_dir/"abstrato (26).jpg"
+prompt -i ">> Change GDM background... DONE"
+
 
 # Install Nord Terminal Theme
 cd $base_dir
 prompt -i ">> Installing Nord Terminal Theme..."
 
-if [ git clone https://github.com/nordtheme/gnome-terminal.git ]; then
+git clone https://github.com/nordtheme/gnome-terminal.git
+
+if [ -d $base_dir/gnome-terminal/src ]; then
   cd gnome-terminal/src
 
-  if [ ./nord.sh ]; then
-    prompt -i ">> Nord Terminal Theme... DONE"
-  else
-    prompt -e ">>> ERROR: Can not install Nord Terminal Theme <<<"
-    exit 1
-  fi
+  ./nord.sh
+  prompt -i ">> Nord Terminal Theme... DONE"
 else
   prompt -e ">>> ERROR: Can not sync with Nord Terminal Theme git repository <<<"
   exit 1
@@ -264,7 +282,9 @@ fi
 cd $base_dir
 prompt -i ">> Extensions and Fixes ReadMe..."
 
-if [ ! cat extensions_ReadMe.txt ]; then
+if [ -f $base_dir/extensions_ReadMe.txt ]; then
+  cat extensions_ReadMe.txt
+else
   prompt -e ">>> ERROR: Can not find the extensions_ReadMe.txt file<<<"
 fi
 
