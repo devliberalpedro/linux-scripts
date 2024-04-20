@@ -44,89 +44,122 @@ cd ${HOME}
 
 # Create target_dir
 if [ ! -d $target_dir ]; then
+  prompt -i ">>> Creating the target folder..."
   mkdir $target_dir
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Deleting older target folder..."
   
-  if [ rm -rf $target_dir ]; then
+  if rm -rf $target_dir; then
     prompt -s ">>> Older target folder was successfully deleted ..."
   else
     prompt -e ">>> ERROR: Can't delete older target folder..."
   fi
+
+  prompt -i ">>> Creating the target folder..."
+  mkdir $target_dir
+  prompt -s ">>> DONE"
 fi
 
 # Start folders backup
 if [ -d $backups_dir ]; then
   prompt -i ">>> Backing up backups folder..."
+
   tar cpfz backups.tar.gz $backups_dir
   mv backups.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Backups folder doesn't exist..."
 fi
 
 if [ -d $documentos_dir ]; then
   prompt -i ">>> Backing up documents folder..."
-  tar cpfzv documentos.tar.gz $documentos_dir
+
+  tar cpfz documentos.tar.gz $documentos_dir
   mv documentos.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Documents folder doesn't exist..."
 fi
 
 if [ -d $downloads_dir ]; then
   prompt -i ">>> Backing up downloads folder..."
-  tar cpfzv downloads.tar.gz $downloads_dir
+
+  tar cpfz downloads.tar.gz $downloads_dir
   mv downloads.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Downloads folder doesn't exist..."
 fi
 
 if [ -d $icc_dir ]; then
   prompt -i ">>> Backing up icc profiles folder..."
-  tar cpfzv icc-profiles.tar.gz $icc_dir
+
+  tar cpfz icc-profiles.tar.gz $icc_dir
   mv icc-profiles.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> ICC Profiles folder doesn't exist..."
 fi
 
+if [ -e "linux-scripts" ]; then
+  prompt -i ">>> Backing up linux-scripts link..."
+
+  tar cpfz linux-scripts.tar.gz linux-scripts
+  mv linux-scripts.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
+else
+  prompt -w ">>> There is no linux-scripts link to make backup..."
+fi
+
 if [ -d $imagens_dir ]; then
   prompt -i ">>> Backing up pictures folder..."
-  tar cpfzv imagens.tar.gz $imagens_dir
+
+  tar cpfz imagens.tar.gz $imagens_dir
   mv imagens.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Pictures folder doesn't exist..."
 fi
 
 if [ -d $musicas_dir ]; then
   prompt -i ">>> Backing up music folder..."
-  tar cpfzv musicas.tar.gz $musicas_dir
+
+  tar cpfz musicas.tar.gz $musicas_dir
   mv musicas.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Music folder doesn't exist..."
 fi
 
-if [ -d $scripts_dir ]; then
-  prompt -i ">>> Backing up scripts folder..."
-  tar cpfzv scripts.tar.gz $scripts_dir
-  mv scripts.tar.gz $target_dir
-else
-  prompt -w ">>> Script folder doesn't exist..."
-fi
-
 if [ -d $videos_dir ]; then
   prompt -i ">>> Backing up videos folder..."
-  tar cpfzv videos.tar.gz $videos_dir
+
+  tar cpfz videos.tar.gz $videos_dir
   mv videos.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> Videos folder doesn't exist..."
 fi
 
 # Start windows syslinks backup
-if [ ls -l windows_* ]; then
-  prompt -i ">>> Backing up documents folder..."
-  tar cpfzv win_links.tar.gz windows_*
-  mv win_links.tar.gz $target_dir
+if ls windows-* >/dev/null 2>&1; then
+  prompt -i ">>> Backing up windows links..."
+
+  tar cpfz win-links.tar.gz windows-*
+  mv win-links.tar.gz $target_dir
+
+  prompt -s ">>> DONE"
 else
   prompt -w ">>> There is no links to make backup..."
 fi
 
-prompt -s ">>>   Backup finalizado!   <<<"
+prompt -s ">>> Backup finalizado! <<<"
