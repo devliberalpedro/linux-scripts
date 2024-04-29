@@ -29,12 +29,12 @@ prompt () {
 	 esac
 }
 # Folders
-codex_dir="${HOME}/codex"
+codex_dir="${HOME}/codex/fedora"
 torrents_dir="${HOME}/Downloads/torrents"
 steam_dir="${HOME}/games/SteamLibrary"
 
 if [ ! -d $codex_dir ]; then
-  mkdir $codex_dir
+  mkdir -p $codex_dir
 else
   prompt -e ">>> Unable to create ${codex_dir} folder..."
 fi
