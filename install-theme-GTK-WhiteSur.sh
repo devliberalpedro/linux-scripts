@@ -60,7 +60,7 @@ prompt -w ">>>   WhiteSur Dark Nord GTK Theme   <<<"
 # Check if base and customization folders exist
 prompt -i ">> Checking for base and customization folders..."
 if [ ! -d $customization_dir ]; then
-  prompt -i ">> Creating base and customization folders"
+  prompt -i ">> Creating customization folder"
 
   mkdir $customization_dir
 
@@ -68,6 +68,12 @@ if [ ! -d $customization_dir ]; then
     prompt -e ">>> ERROR: Can not create ${customization_dir} folder <<<"
     exit 1
   fi
+else
+  prompt -i ">> Customization folder exists"
+fi
+
+if [ ! -d $base_dir ]; then
+  prompt -i ">> Creating base folder"
 
   mkdir $base_dir
   
@@ -75,7 +81,7 @@ if [ ! -d $customization_dir ]; then
     prompt -e ">>> ERROR: Can not create ${base_dir} folder <<<"
     exit 1
   fi
-elif [ -d $base_dir ]; then
+else
   rm -rf $base_dir
 
   if [ -d $base_dir ]; then
@@ -104,10 +110,12 @@ if [ -d $base_dir/backgrounds ]; then
 
   if [ -d $base_dir/fonts ]; then
     prompt -i ">> Fonts... DONE"
-  
-    tar xfz $backups_dir/config-and-readme.tar.gz
 
-    if [ -f $base_dir/extensions_ReadMe.txt ] && [ -f $base_dir/gnome-nord-extensions.conf ] && [ -f $base_dir/ReadMe.txt ]; then
+    cp $backups_dir/extensions_ReadMe.txt .
+    #tar xfz $backups_dir/config-and-readme.tar.gz
+
+    #if [ -f $base_dir/extensions_ReadMe.txt ] && [ -f $base_dir/gnome-nord-extensions.conf ] && [ -f $base_dir/ReadMe.txt ]; then
+    if [ -f $base_dir/extensions_ReadMe.txt ]; then
       prompt -i ">> Config and ReadMe... DONE"
       
       #tar xfz $backups_dir/glava-config.tar.gz
@@ -119,7 +127,8 @@ if [ -d $base_dir/backgrounds ]; then
       #  exit 1
       #fi
     else
-      prompt -e ">>> ERROR: Can not extract config-and-readme.tar.gz <<<"
+      #prompt -e ">>> ERROR: Can not extract config-and-readme.tar.gz <<<"
+      prompt -e ">>> ERROR: Can not find extensions_ReadMe file <<<"
       exit 1
     fi
   else
@@ -258,7 +267,7 @@ else
   exit 1
 fi
   
-sudo ./tweaks.sh -g -b $wallpapers_dir/"abstrato (26).jpg"
+sudo ./tweaks.sh -g -b $wallpapers_dir/"abstrato (02).png"
 prompt -i ">> Change GDM background... DONE"
 
 

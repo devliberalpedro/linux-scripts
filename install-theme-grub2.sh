@@ -1,6 +1,6 @@
 #/bin/bash
 
-base_dir="${HOME}/Downloads/fedora-customizations"
+base_dir="${HOME}/Downloads/customizations"
 downs_dir="${HOME}/Downloads"
 git_dir="$base_dir/grub2-themes"
 
